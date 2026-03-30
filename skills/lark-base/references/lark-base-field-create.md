@@ -24,6 +24,11 @@ lark-cli base +field-create \
   --base-token app_xxx \
   --table-id tbl_xxx \
   --json '{"name":"状态","type":"select","multiple":false,"options":[{"name":"Todo","hue":"Blue","lightness":"Lighter"},{"name":"Done","hue":"Green","lightness":"Light"}]}'
+
+lark-cli base +field-create \
+  --base-token app_xxx \
+  --table-id tbl_xxx \
+  --json '{"name":"负责人","type":"user","multiple":false,"description":"用于标记记录的直接负责人；协作约定可参考[团队字段约定](https://example.com/field-spec)"}'
 ```
 
 ## 参数
@@ -46,6 +51,7 @@ POST /open-apis/base/v3/bases/:base_token/tables/:table_id/fields
 
 - `--json` 必须是 **JSON 对象**，顶层直接传字段定义，不要再套一层。
 - 顶层最少包含：`name`、`type`。
+- 如需字段说明，直接传 `description`；支持纯文本，也支持 Markdown 链接，如 `协作约定可参考[团队字段约定](https://example.com/field-spec)`。
 - `type` 不同，必填子字段不同：
   - `select`：用 `multiple` + `options`（`options` 里只传 `name/hue/lightness`，不要传 `id`）。
   - `link`：必须有 `link_table`，可选 `bidirectional`、`bidirectional_link_field_name`。
@@ -59,6 +65,7 @@ POST /open-apis/base/v3/bases/:base_token/tables/:table_id/fields
   "name": "状态",
   "type": "select",
   "multiple": false,
+  "description": "任务当前的状态",
   "options": [
     { "name": "Todo", "hue": "Blue", "lightness": "Lighter" },
     { "name": "Done", "hue": "Green", "lightness": "Light" }
@@ -78,7 +85,7 @@ POST /open-apis/base/v3/bases/:base_token/tables/:table_id/fields
 ## 坑点
 
 - ⚠️ 这是写入操作，执行前必须确认。
-- ⚠️ 当 `--json.type` 是 `formula` 或 `lookup` 时，先读对应 guide，再创建。
+- ⚠️ 当 `type` 是 `formula` 或 `lookup` 时，先读对应 guide，再创建。
 
 ## 参考
 
